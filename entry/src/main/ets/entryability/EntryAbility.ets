@@ -1,8 +1,11 @@
 import { AbilityConstant, ConfigurationConstant, UIAbility, Want } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
+import { preferences } from '@kit.ArkData';
 
 const DOMAIN = 0x0000;
+
+export let dataPreferences: preferences.Preferences | null = null;
 
 export default class EntryAbility extends UIAbility {
   onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): void {
@@ -25,11 +28,17 @@ export default class EntryAbility extends UIAbility {
       }
       hilog.info(DOMAIN, 'testTag', 'Succeeded in loading the content.');
     });
+
+    // Read Date Storage
+    dataPreferences = preferences.getPreferencesSync(this.context, {
+      name: 'customStorage'
+    })
   }
 
   onWindowStageDestroy(): void {
     // Main window is destroyed, release UI related resources
     hilog.info(DOMAIN, 'testTag', '%{public}s', 'Ability onWindowStageDestroy');
+
   }
 
   onForeground(): void {
